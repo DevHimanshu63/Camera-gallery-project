@@ -13,7 +13,7 @@ let constraints={
     audio:true,
 }
 
-// navigator.mediaDevices.getUserMedia(constraints)
+navigator.mediaDevices.getUserMedia(constraints)
 .then((stream) =>{
     // console.log(stream);
     video.srcObject = stream;
@@ -45,10 +45,42 @@ recordbtncont.addEventListener("click", (e) => {
         recordFlag=!recordFlag;
         if(recordFlag){ //start
             recorder.start();
-            recordbtn.classList.add("scale-record")
+            recordbtn.classList.add("scale-record") //animation
+            startTimer()
         }else{//stop
             recorder.stop();
-            recordbtn.classList.remove("scale-record")
+            recordbtn.classList.remove("scale-record") //for animation
+            stopTimer()
         }
 })
 
+let timerId;
+let counter=0;
+let timer=document.querySelector(".timer")
+function startTimer(){
+    timer.style.display="block"
+   function displayTimer(){
+   let totalnumber=counter;
+   let hours=Number.parseInt(totalnumber / 3600);
+   totalnumber = totalnumber % 3600 ; //remaining value
+
+   let mins=Number.parseInt(totalnumber / 60);
+   totalnumber = totalnumber % 60; //remaining value
+
+   let second = totalnumber ;
+
+   hours=(hours<10) ? `0${hours}` : hours;
+   mins=(mins<10) ? `0${mins}` : mins;
+   second=(second<10) ? `0${second}` : second;
+    timer.innerText = `${hours} : ${mins} : ${second}`
+    counter++;
+   }
+   timerId=setInterval(displayTimer,1000);
+
+}
+
+function stopTimer(){
+        clearInterval(timerId);
+        timer.innerText="00:00:00"
+        timer.style.display="none"
+}
